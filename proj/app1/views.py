@@ -43,6 +43,7 @@ class DataFormView(ModelFormSetView):
     prefix = "table"
     can_delete = True
     success_url = reverse_lazy('app1:list')
+    fields = '__all__'
 
     # The functions below are just for debug!
     def post(self, request, *args, **kwargs):
