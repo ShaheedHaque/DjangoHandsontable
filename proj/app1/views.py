@@ -1,11 +1,11 @@
 # app1/views.py
+from django.urls import reverse_lazy
 from django.views.generic import TemplateView,  ListView, DetailView
 from django.views.generic.edit import CreateView, FormView
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.forms import modelformset_factory
 from extra_views import FormSetView, ModelFormSetView
-from django.core.urlresolvers import reverse_lazy
 from pprint import pprint
 import collections
 
@@ -31,7 +31,7 @@ def create_data_ajax(request):
             if all(x for x in row): # All not None!
                 entry = Data.objects.create_entry(row[0],row[1],row[2])
         return HttpResponse("Updated")
-    except Exception, e:
+    except Exception as e:
         return HttpResponse("Error: %s"%e)
 
 class DataFormView(ModelFormSetView):
@@ -51,11 +51,11 @@ class DataFormView(ModelFormSetView):
         return super(DataFormView, self).post(request, *args, **kwargs)
 
     def formset_valid(self, formset):
-        print "FORM VALID"
+        print("FORM VALID")
         return super(DataFormView, self).formset_valid(formset)
 
     def formset_invalid(self, formset):
-        print "FORM INNNNNVALID"
+        print("FORM INNNNNVALID")
         pprint(formset.errors)
         return super(DataFormView, self).formset_invalid(formset)
 
@@ -69,11 +69,13 @@ from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineForm
 class ReductionInline(InlineFormSet):
     model = Entry
     prefix = "table"
+    fields = '__all__'
 
 class CreateReductionView(CreateWithInlinesView):
     model = Reduction
     inlines = [ReductionInline]
     template_name = 'reduction_formset.html'
+    fields = '__all__'
 
     def get_context_data(self, **kwargs):
         ctx = super(CreateReductionView, self).get_context_data(**kwargs)
@@ -86,11 +88,11 @@ class CreateReductionView(CreateWithInlinesView):
         return super(CreateReductionView, self).post(request, *args, **kwargs)
 
     def forms_valid(self,  form, inlines):
-        print "FORMs VALID"
+        print("FORMs VALID")
         return super(CreateReductionView, self).forms_valid(form, inlines)
 
     def forms_invalid(self,  form, inlines):
-        print "FORMs INNNNNVALID"
+        print("FORMs INNNNNVALID")
         pprint(form.errors)
         for formset in inlines:
             pprint(formset.errors)
@@ -100,3 +102,4 @@ class UpdateReductionView(UpdateWithInlinesView):
     model = Reduction
     inlines = [ReductionInline]
     template_name = 'reduction_formset.html'
+    fields = '__all__'

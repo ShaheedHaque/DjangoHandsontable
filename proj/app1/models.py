@@ -1,8 +1,8 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
 
 class DataManager(models.Manager):
     def create_entry(self, entry, sample, background):
